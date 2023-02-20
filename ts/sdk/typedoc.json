@@ -1,0 +1,7 @@
+{
+  "out": "./docs",
+  "name": "aurand-contract",
+  "theme": "markdown",
+  "readme": "none",
+  "tsconfig": "./tsconfig.bundle.json"
+}
