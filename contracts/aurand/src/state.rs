@@ -58,7 +58,7 @@ pub fn get_commitments(
         PENDING_COMMITMENTS.remove(storage, commitment.id);
 
         count += 1;
-        if count == max_callback {
+        if count >= max_callback {
             break;
         }
     }
