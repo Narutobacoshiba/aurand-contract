@@ -1,6 +1,6 @@
 use cosmrs::proto::cosmos::bank::v1beta1::{
-    QueryAllBalancesRequest, QueryAllBalancesResponse, QueryBalanceRequest, QueryBalanceResponse,
-    QueryTotalSupplyRequest, QueryTotalSupplyResponse,
+    QueryAllBalancesRequest, QueryAllBalancesResponse, QueryBalanceRequest,
+    QueryTotalSupplyRequest, QueryTotalSupplyResponse, QueryBalanceResponse
 };
 use test_tube::fn_query;
 

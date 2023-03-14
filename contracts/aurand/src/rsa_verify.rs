@@ -3,7 +3,7 @@ use crate::error::ContractError;
 use rsa::{BigUint,PaddingScheme,RsaPublicKey,PublicKey};
 use sha2::Sha512;
 
-// random org MODULUS for generate public key
+/// random org MODULUS for generate public key
 const MODULUS: &str = concat!("ecedc74162e74f30828ffab0a08e2f8ff4fddb7ef07bbe2bc1c256db0e12bb320a565027e72",
 "85a25c69e429769987c2642ddda53c1b56daee7df197b85d78f921f9a12460cde254e84965d9022a3cf0db1ee55124089d",
 "992c827b3c47888692524f2275fa7e606312bb7562b8c8f01e47ab3de4a226e4a8866056e67541f26881b9acad3eb88a68",
@@ -15,10 +15,10 @@ const MODULUS: &str = concat!("ecedc74162e74f30828ffab0a08e2f8ff4fddb7ef07bbe2bc
 "be6a6775ea95de92c7db49d99436a038d33e53c885818c2dd78485799852b8670c2869389ad6bec6ff7a1e0cdfcb1651c7",
 "0141397db01bd6464adb4826b3971640f98e4a38f109dcd211f068ca14dc1b77c064f589372e76e8712a7713cd81543d60",
 "8b8cd177d32d0610a519cfffc62f12e56ac5868f25fac67e742abf8ae5582d39065");
-// random org EXPONENT for generate public key
+/// random org EXPONENT for generate public key
 const EXPONENT: &str = "010001";
 
-// verify random value receive from random org
+/// verify random value receive from random org
 pub fn verify_message(data: String, signature: String) -> Result<bool, ContractError> {
     let n: BigUint = BigUint::from_bytes_be(&hex::decode(MODULUS)
         .map_err(|_| ContractError::CustomError{val: String::from("Invalid HEX string format for MODULUS!")})?);

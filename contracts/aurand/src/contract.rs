@@ -278,7 +278,7 @@ fn execute_update_bot(
     _info: MessageInfo, 
     hashed_api_key: String, 
     moniker: String
-) -> Result<Response, ContractError> {
+) -> Result<Response, ContractError> {              
     if !BOTS.has(_deps.storage, _info.sender.clone()) {
         return Err(ContractError::UnregisteredAddress{});
     }
@@ -550,7 +550,6 @@ fn execute_add_randomness(
         return Err(ContractError::InvalidApiKey{});
     }
 
-
     // convert time with format "D:M:Y s:m:hZ" to Timestamp
     let completion_time: Timestamp = convert_datetime_string(org_randomness.completionTime)?;
 
@@ -563,17 +562,15 @@ fn execute_add_randomness(
     
     // generate callback message for each selected commitment
     for commitment in commitments.iter() {
-        let wasm_msg = generate_true_randomness_submsg(
+        if let Some(wasm_msg) = generate_true_randomness_submsg(
             org_randomness.data, 
             (*commitment).clone(), 
             configs.callback_limit_gas
-        );
-
-        if wasm_msg.is_some() {
+        ) {
             total_bounty = total_bounty.checked_add(commit_bounty)
                 .map_err(|_| ContractError::Uint128Overflow{})?;
-            messages.push(wasm_msg.unwrap());
-        } 
+            messages.push(wasm_msg);
+        }
     }
 
     // create message to send bounty to bot for all success commitments
@@ -607,7 +604,6 @@ fn execute_nois_receive(
         .to_array()
         .map_err(|_| ContractError::InvalidRandomness{})?;
 
-    
     // get commitment with job_id
     let commitment = get_commitment(_deps.storage, job_id.clone())?;
 
@@ -706,11 +702,9 @@ pub fn query_get_commitments(_deps: Deps, limit: u32) -> StdResult<CommitmentsQu
     let mut vecs: Vec<Commitment> = Vec::new();
 
     // we limit number of commitments can take per query to prevent out of gas
-    for i in 0..COMMITMENTS.iter(_deps.storage)?.take(limit as usize).count() {
-        let commitment = COMMITMENTS.get(_deps.storage,i.try_into().unwrap())?;
-        if commitment.is_some() {
-            vecs.push(commitment.unwrap());
-        }
+    for i in COMMITMENTS.iter(_deps.storage)?.take(limit as usize) {
+        let commitment = i?;
+        vecs.push(commitment);
     }
 
     Ok(CommitmentsQuery{commitments:vecs})

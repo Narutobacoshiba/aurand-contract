@@ -23,8 +23,8 @@ pub struct Commitment {
 pub const COMMITMENTS: Deque<Commitment> = Deque::new("commitments"); // a list of commitments ordered by commit time that is used to determine which commits satisfy the time conditions
 pub const PENDING_COMMITMENTS: Map<String, Commitment> = Map::new("pending commitments"); // map of commitments, use for getting commitment's information
 
-// get commitments that meet time conditions 
-//      commit_time <= completion_time <= expired_time
+/// get commitments that meet time conditions 
+///      commit_time <= completion_time <= expired_time
 pub fn get_commitments(
     storage: &mut dyn Storage,
     completion_time: Timestamp,
@@ -42,7 +42,8 @@ pub fn get_commitments(
 
         let commitment = commitment.unwrap();
 
-        // if meet a commitment has `commit_time` greater than `completion_time`, push it back to queue and return current list
+        // if meet a commitment has `commit_time` greater than `completion_time`, 
+        // push it back to queue and return current list
         if commitment.commit_time.ge(&completion_time) {
             COMMITMENTS.push_back(storage, &commitment)?;
             break;
@@ -66,7 +67,7 @@ pub fn get_commitments(
     return Ok(vecs);
 }
 
-// get commitment from PENDING_COMMIMENTS by id
+/// get commitment from PENDING_COMMIMENTS by id
 pub fn get_commitment(
     storage: &mut dyn Storage,
     commit_id: String,
@@ -189,8 +190,8 @@ mod unit_tests {
         add_commitments(&mut deps, String::from("2"), 0u64, 5u64);
         add_commitments(&mut deps, String::from("3"), 0u64, 5u64);
         add_commitments(&mut deps, String::from("4"), 0u64, 5u64);
-        add_commitments(&mut deps, String::from("5"),  0u64, 5u64);
-        add_commitments(&mut deps,String::from("6"),  0u64, 5u64);
+        add_commitments(&mut deps, String::from("5"), 0u64, 5u64);
+        add_commitments(&mut deps, String::from("6"), 0u64, 5u64);
 
         let completion_time: Timestamp = Timestamp::from_seconds(4);
         let commitments = get_commitments(&mut deps.storage, completion_time, 5u32).unwrap();
@@ -208,7 +209,7 @@ mod unit_tests {
         add_commitments(&mut deps, String::from("2"), 0u64, 5u64);
         add_commitments(&mut deps, String::from("3"), 0u64, 5u64);
         add_commitments(&mut deps, String::from("4"), 0u64, 5u64);
-        add_commitments(&mut deps, String::from("5"),  5u64, 10u64);
+        add_commitments(&mut deps, String::from("5"), 5u64, 10u64);
 
         let completion_time: Timestamp = Timestamp::from_seconds(4);
         let commitments = get_commitments(&mut deps.storage, completion_time, 5u32).unwrap();

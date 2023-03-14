@@ -5,7 +5,7 @@ use chrono::{DateTime, Local};
 use nois::{int_in_range, sub_randomness_with_key};
 use cosmwasm_std::Timestamp;
 
-// calculate sha256 hash value
+/// calculate sha256 hash value
 pub fn sha256_hash(string: &[u8]) -> Vec<u8> {
     let mut hasher = Sha256::new();
     // write input message
@@ -16,7 +16,7 @@ pub fn sha256_hash(string: &[u8]) -> Vec<u8> {
     return result.to_vec();
 }
 
-// calculate sha512 hash value
+/// calculate sha512 hash value
 pub fn sha512_hash(string: &[u8]) -> Vec<u8> {
     let mut hasher = Sha512::new();
     // write input message
@@ -27,13 +27,13 @@ pub fn sha512_hash(string: &[u8]) -> Vec<u8> {
     return result.to_vec();
 }
 
-// generate commitment id from user 's address and user's nonce
+/// generate commitment id from user 's address and user's nonce
 pub fn make_commit_id(address: String, nonce: u64) -> String{
     let seed = address + &nonce.to_string();
     return hex::encode(sha256_hash(seed.as_bytes()));
 }
 
-// using nois's tool box to generate list of hex randomness
+/// using nois's tool box to generate list of hex randomness
 pub fn generate_hex_randomness(randomness: [u8;32], job_id: String, num: u32) -> Vec<String> {
     let mut return_data: Vec<String> = Vec::new();
 
@@ -49,7 +49,7 @@ pub fn generate_hex_randomness(randomness: [u8;32], job_id: String, num: u32) ->
     return return_data;
 }
 
-// using nois's tool box to generate list of integer randomness
+/// using nois's tool box to generate list of integer randomness
 pub fn generate_int_randomness(randomness: [u8;32], job_id: String, min: i32, max: i32, num: u32) -> Vec<i32> {
     let mut return_data: Vec<i32> = Vec::new();
 
@@ -96,7 +96,7 @@ pub struct RandomOrgData {
     pub serialNumber: u32,
 }
 
-// convert string to random org object
+/// convert string to random org object
 pub fn decode_randomorg_data(data: String) -> Result<RandomOrgData, ContractError> {
     // using serde_json_wasm, a serde-json alternative for CosmWasm smart contracts
     let random_org_data: RandomOrgData = serde_json_wasm::from_str(&data)
@@ -104,7 +104,7 @@ pub fn decode_randomorg_data(data: String) -> Result<RandomOrgData, ContractErro
     return Ok(random_org_data);
 }
 
-// convert time with format "D:M:Y s:m:hZ" to Timestamp
+/// convert time with format "D:M:Y s:m:hZ" to Timestamp
 pub fn convert_datetime_string(data: String) -> Result<Timestamp, ContractError> {
     let date_time = data.parse::<DateTime<Local>>()
         .map_err(|_| ContractError::CustomError{val: String::from("Invalid date string format!")})?;

@@ -110,6 +110,7 @@ func (env *TestEnv) BeginNewBlock(beginBlock bool) {
 		requireNoErr(err)
 		valAddr = valAddrFancy.Bytes()
 	} else {
+
 		valAddrFancy := env.setupValidator(stakingtypes.Bonded)
 		validator, _ := env.App.StakingKeeper.GetValidator(env.Ctx, valAddrFancy)
 		valAddr2, _ := validator.GetConsAddr()
